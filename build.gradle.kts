@@ -17,3 +17,13 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.register<Jar>("buildJar") {
+    archiveBaseName.set("technologies")
+    from(sourceSets.main.get().output)
+
+    subprojects.forEach { subproject ->
+        dependsOn(subproject.tasks.named("buildJar"))
+        from(subproject.sourceSets.main.get().output)
+    }
+}
